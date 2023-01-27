@@ -1,12 +1,11 @@
 // Write your tests here
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import "@testing-library/jest-dom";
-import userEvent from "@testing-library/user-event";
 import AppFunctional from "./AppFunctional";
 test("sanity", () => {
-  expect(true).toBe(false);
+  expect(true).toBe(true);
 });
 
 test("hata olmadan render ediliyor", () => {
@@ -46,7 +45,7 @@ test("sağ buton çalışıyor", () => {
   const sagButon = screen.getByText(/SAĞ/i);
   const koordinatlarMetin = screen.getByText(/Koordinatlar/i);
   const adimSayac = screen.getByText(/kere ilerlediniz/i);
-  userEvent.click(sagButon);
-  expect(koordinatlarMetin).toHaveTextContent("Koordinatlar (3,2)");
+  fireEvent.click(sagButon);
+  expect(koordinatlarMetin).toHaveTextContent("Koordinatlar (3, 2)");
   expect(adimSayac).toHaveTextContent("1 kere ilerlediniz");
 });

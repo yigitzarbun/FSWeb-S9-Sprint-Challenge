@@ -22,13 +22,6 @@ export default function AppFunctional(props) {
 
   const [email, setEmail] = useState(initialEmail);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    x: null,
-    y: null,
-    steps: null,
-  });
-
   // HANDLES
   const getXY = () => {
     if (coordinates.x === 1 && coordinates.y === 1) {
@@ -60,7 +53,7 @@ export default function AppFunctional(props) {
       setMessage(initialMessage);
     }
     if (id === "down" && coordinates.y >= 3) {
-      setMessage("Aşağı gidemezsin");
+      setMessage("Aşağıya gidemezsiniz");
     }
     if (id === "up" && coordinates.y >= 2) {
       setCoordinates({ ...coordinates, y: coordinates.y - 1 });
@@ -68,7 +61,7 @@ export default function AppFunctional(props) {
       setMessage(initialMessage);
     }
     if (id === "up" && coordinates.y <= 1) {
-      setMessage("Yukarı gidemezsin");
+      setMessage("Yukarıya gidemezsiniz");
     }
     if (id === "right" && coordinates.x < 3) {
       setCoordinates({ ...coordinates, x: coordinates.x + 1 });
@@ -76,7 +69,7 @@ export default function AppFunctional(props) {
       setMessage(initialMessage);
     }
     if (id === "right" && coordinates.x >= 3) {
-      setMessage("Sağa gidemezsin");
+      setMessage("Sağa gidemezsiniz");
     }
     if (id === "left" && coordinates.x >= 2) {
       setCoordinates({ ...coordinates, x: coordinates.x - 1 });
@@ -84,7 +77,7 @@ export default function AppFunctional(props) {
       setMessage(initialMessage);
     }
     if (id === "left" && coordinates.x <= 1) {
-      setMessage("Sola gidemezsin");
+      setMessage("Sola gidemezsiniz");
     }
   };
 
@@ -95,6 +88,7 @@ export default function AppFunctional(props) {
     });
     setSteps(initialSteps);
     setMessage(initialMessage);
+    setEmail(initialEmail);
   };
 
   // USE EFFECT
@@ -106,31 +100,26 @@ export default function AppFunctional(props) {
     setEmail(event.target.value);
   }
 
-  /*let formData = {
-    email: "yzarbun@gmail.com",
-    x: 2,
-    y: 2,
-    steps: 2,
-  };*/
-
   function onSubmit(event) {
     event.preventDefault();
-    setFormData({
+    const formData = {
       email: email,
       x: coordinates.x,
       y: coordinates.y,
       steps: steps,
-    });
+    };
     axios
       .post("http://localhost:9000/api/result", formData)
       .then((response) => {
-        console.log("reponse.data: ", response.data);
+        setMessage(response.data.message);
+        setEmail("");
       })
       .catch((error) => {
         console.log(error);
+        setMessage(error.response.data.message);
       });
   }
-  console.log("formData: ", formData);
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
@@ -172,6 +161,7 @@ export default function AppFunctional(props) {
           type="email"
           placeholder="email girin"
           onChange={onChange}
+          value={email}
         ></input>
         <input id="submit" type="submit"></input>
       </form>
